@@ -1,12 +1,12 @@
 cc = gcc -Wall
 FILES = obj/main.o #liste des fichiers sources avec .o
-OPT = -lm -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image
+OPT = -lm -lmingw32 -lSDL2main -lSDL2 #-lSDL2_ttf -lSDL2_image
 
 all: #commande pour compiler et lancer le jeu
-	make JeuTraverse
-	JeuTraverse.exe
+	make 2048
+	2048.exe
 	
-JeuTraverse : $(FILES) #commande pour compiler le jeu
+2048: $(FILES) #commande pour compiler le jeu
 	$(cc) $^ -o $@ $(OPT)
 
 obj/%o: src/%c #commande de création des .o avec les .c
