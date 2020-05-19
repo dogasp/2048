@@ -3,9 +3,12 @@
 #include "../headers/types.h"
 #include "../headers/graphics.h"
 
+#define FPS 150
+
 int main(int argc, char** argv)
 {
     Pawn empty = {'a', 'a'};
+    int beginRender = 0, lastRender = 0, dtime = 0;
     int height = 500, cellCount = 25, cellSize = height/cellCount;
     Pawn grid[cellCount][cellCount];
     for (int i = 0; i < cellCount; i ++){
@@ -36,6 +39,17 @@ int main(int argc, char** argv)
         PrintGrid(renderer, cellCount, grid, cellSize);
 
         SDL_RenderPresent(renderer);
+
+
+        //regulation de la vitesse de rafraichissement pour ne pas surcharger le processeur
+        beginRender = SDL_GetTicks();
+        dtime = beginRender - lastRender;
+    
+        if(dtime < 0) dtime = 0;
+        if(dtime < 1000 / FPS)
+        SDL_Delay( (1000 / FPS) - dtime);
+    
+        lastRender = SDL_GetTicks();
     }
 
     SDL_DestroyWindow(window);
