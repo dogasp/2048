@@ -6,10 +6,10 @@ else
 	OPT = `pkg-config --libs --cflags sdl2`
 endif
 
-all: 2048 #commande pour compiler et lancer le jeu
-	./2048
+all: Qwirkle #commande pour compiler et lancer le jeu
+	./Qwirkle
 
-2048: $(FILES) #commande pour compiler le jeu
+Qwirkle: $(FILES) #commande pour compiler le jeu
 	$(cc) $^ -o $@ $(OPT)
 
 obj/%o: src/%c #commande de création des .o avec les .c

@@ -20,6 +20,12 @@ int main(int argc, char** argv)
                 continuer = 0;
                 break;
         }
+        SDL_SetRenderDrawColor(renderer, 50, 0, 200, 255);
+        SDL_RenderFillRect(renderer, NULL);
+
+
+
+        SDL_RenderPresent(renderer);
     }
 
     SDL_DestroyWindow(window);
