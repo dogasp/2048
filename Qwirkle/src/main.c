@@ -3,7 +3,9 @@
 
 int main(int argc, char** argv)
 {
-    int height = 500;
+    int height = 500, cellCount = 25, cellSize = height/cellCount;
+    if (cellSize);
+
     SDL_Window* window = NULL;
     window = SDL_CreateWindow("Jeu 2048",SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, height + height / 5, height, SDL_WINDOW_SHOWN);
 
@@ -20,10 +22,8 @@ int main(int argc, char** argv)
                 continuer = 0;
                 break;
         }
-        SDL_SetRenderDrawColor(renderer, 50, 0, 200, 255);
+        SDL_SetRenderDrawColor(renderer, 10 0, 150, 255, 255);
         SDL_RenderFillRect(renderer, NULL);
-
-
 
         SDL_RenderPresent(renderer);
     }
