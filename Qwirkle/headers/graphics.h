@@ -1,0 +1,1 @@
+void PrintGrid(SDL_Renderer *, int n, Pawn grid[n][n], int);

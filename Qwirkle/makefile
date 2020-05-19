@@ -1,7 +1,7 @@
 cc = gcc -Wall
-FILES = obj/main.o #liste des fichiers sources avec .o
+FILES = obj/main.o obj/graphics.o #liste des fichiers sources avec .o
 ifeq ($(OS), Windows_NT)
-	OPT = -lm -lmingw32 -lSDL2main -lSDL2 #-lSDL2_ttf -lSDL2_image
+	OPT = -lm -lmingw32 -lSDL2main -lSDL2 -lSDL2_image #-lSDL2_ttf 
 else
 	OPT = `pkg-config --libs --cflags sdl2`
 endif
