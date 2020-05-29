@@ -1,0 +1,1 @@
+int randomPicker(int n, int g[n][n]);
