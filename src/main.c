@@ -15,11 +15,13 @@ int main(int argc, char** argv)
     }
 
     //tirage de deux cases au hasard
-    for (int i = 0; i < 2; i ++){
+    /*for (int i = 0; i < 2; i ++){
         randomPicker(gridSize, grid);
-    }
-    grid[0][0] = 2048;
+    }*/
+    grid[0][0] = 2;
+    grid[3][0] = 2;
 
+    
     //initialisation de la fenetre et de la police
     SDL_Init(SDL_INIT_VIDEO);
     TTF_Init();
@@ -32,7 +34,7 @@ int main(int argc, char** argv)
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
-    int continuer = 1;
+    int continuer = 1, canclick = 0;
     SDL_Event event;
 
     while (continuer){
@@ -40,6 +42,30 @@ int main(int argc, char** argv)
         switch (event.type){
             case SDL_QUIT:
                 continuer = 0;
+                break;
+            case SDL_KEYDOWN:
+                canclick = 1;
+                break;
+            case SDL_KEYUP:
+                if (canclick == 1){
+                    if (event.key.keysym.sym == SDLK_RIGHT){
+                        moveRight(gridSize, grid);
+                        randomPicker(gridSize, grid);
+                    }
+                    else if (event.key.keysym.sym == SDLK_DOWN){
+                        moveDown(gridSize, grid);
+                        randomPicker(gridSize, grid);
+                    }
+                    else if (event.key.keysym.sym == SDLK_LEFT){
+                        moveLeft(gridSize, grid);
+                        randomPicker(gridSize, grid);
+                    }
+                    else if (event.key.keysym.sym == SDLK_UP){
+                        moveUp(gridSize, grid);
+                        randomPicker(gridSize, grid);
+                    }
+                }
+                canclick = 0;
                 break;
         }
         printGrid(renderer, Height, gridSize, grid);
