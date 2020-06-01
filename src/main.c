@@ -8,7 +8,6 @@ int main(int argc, char** argv)
 {
     int gridSize = 4;
     int grid[gridSize][gridSize];
-    int result;
     for (int i = 0; i < gridSize; i ++){
         for (int j = 0; j < gridSize; j ++){
             grid[i][j] = 0;
@@ -23,11 +22,6 @@ int main(int argc, char** argv)
     grid[0][3] = 2;
     grid[0][1] = 2;
 
-
-<<<<<<< HEAD
-=======
-
->>>>>>> 2a5adfddbf5fe95b2bf7ba98611685b8eea2e4b1
     //initialisation de la fenetre et de la police
     SDL_Init(SDL_INIT_VIDEO);
     TTF_Init();
@@ -55,7 +49,7 @@ int main(int argc, char** argv)
             case SDL_KEYUP:
                 if (canclick == 1){
                     if (event.key.keysym.sym == SDLK_RIGHT){
-                        result = moveRight(gridSize, grid);
+                        moveRight(gridSize, grid);
                         randomPicker(gridSize, grid);
                     }
                     else if (event.key.keysym.sym == SDLK_DOWN){
