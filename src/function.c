@@ -20,7 +20,6 @@ void randomPicker(int gridSize, int grid[gridSize][gridSize]){
                    available = 1;
                }
             }
-        
         }
         break;
     }
@@ -40,50 +39,51 @@ void randomPicker(int gridSize, int grid[gridSize][gridSize]){
     }
     else {
         //Message de fin
-        printf("bite"); 
+        printf("bite fin");
     }
 }
-void moveRightnis(int gridSize, int grid[gridSize][gridSize]){
-    int cx;
-    int z = 1;
+int moveRight(int gridSize, int grid[gridSize][gridSize]){
+    int cx, nb_evo = 0, z = 1;
     for (int j = 0; j < gridSize; j ++){
-        for (int i = gridSize-1; i > 0; i--){
+        for (int i = gridSize-1; i >= 0; i--){
             z = 1;
             while (1){
-                if (z<4){
-                    if (grid[i][j] == grid[i-z][j]){
-                        printf("bite");   
+                if (i-z>-1){
+                    if (grid[i][j] == grid[i-z][j] && grid[i][j]!=0){
                         grid[i][j] = grid[i][j]*2 ;
                         grid[i-z][j] = 0;
+                        nb_evo = 1;
                         break;
                         }
                     else {
                         z++;
                         }
                     }
-                else break;    
-            }  
+                else break;
+            }
         }
     }
     for (int j = 0; j < gridSize; j ++){
         for (int i = gridSize-2; i > -1; i --){
             cx = i;
+
             while (1){
                 if(grid[cx][j] != 0 && grid[cx+1][j] == 0){
                     grid[cx+1][j] = grid[cx][j];
                     grid[cx][j] = 0;
+                    nb_evo = 1;
+                    printf("%d %d %d/", i, cx+1, j);
                 }
                 else break;
                 cx ++;
-                if (cx == -1) break;
+                if (cx == gridSize) break;
             }
         }
     }
-    
+    return nb_evo;
 }
 
-
-void moveRight(int gridSize, int grid[gridSize][gridSize]){
+void moveRightbis(int gridSize, int grid[gridSize][gridSize]){
     int oi = gridSize-1, cx;
     for (int j = 0; j < gridSize; j ++){
         for (int i = gridSize-2; i > -1; i--){
@@ -113,77 +113,128 @@ void moveRight(int gridSize, int grid[gridSize][gridSize]){
     }
 }
 
-void moveLeft(int gridSize, int grid[gridSize][gridSize]){
-    int cx;
+int moveLeft(int gridSize, int grid[gridSize][gridSize]){
+    int cx, nb_evo = 0, z = 1;
     for (int j = 0; j < gridSize; j ++){
-        for (int i = 1; i < gridSize; i++){
-            cx = i;
+        for (int i = 0; i < gridSize; i++){
+            z = 1;
             while (1){
-                if(grid[cx][j] != 0 && grid[cx-1][j] == 0){
-                    grid[cx-1][j] = grid[cx][j];
-                    grid[cx][j] = 0;
-                }
-                else break;
-                cx --;
-                if (cx == -1) {
-                    cx ++;
+              if (i+z<gridSize){
+                  if (grid[i][j] == grid[i+z][j] && grid[i][j]!=0){
+                      grid[i][j] = grid[i][j]*2 ;
+                      grid[i+z][j] = 0;
+                      nb_evo = 1;
+                      break;
+                      }
+                  else {
+                      z++;
+                      }
+                  }
+              else break;
+          }
+      }
+  }
+
+  for (int j = 0; j < gridSize; j ++){
+      for (int i = 1; i < gridSize; i ++){
+          cx = i;
+          while (1){
+              if(grid[cx][j] != 0 && grid[cx-1][j] == 0){
+                  grid[cx-1][j] = grid[cx][j];
+                  grid[cx][j] = 0;
+                  nb_evo = 1;
+                  printf("%d %d %d/", i, cx-1, j);
+              }
+              else break;
+              cx --;
+              if (cx == 0) break;
+          }
+      }
+    }
+    return nb_evo;
+  }
+
+int moveDown(int gridSize, int grid[gridSize][gridSize]){
+  int cx, nb_evo = 0, z = 1;
+  for (int i = 0; i < gridSize; i ++){
+      for (int j = gridSize-1; j >= 0; j--){
+          z = 1;
+          while (1){
+              if (j-z>-1){
+                  if (grid[i][j] == grid[i][j-z] && grid[i][j]!=0){
+
+                      grid[i][j] = grid[i][j]*2 ;
+                      grid[i][j-z] = 0;
+                      nb_evo = 1;
+                      break;
+                      }
+                  else {
+                      z++;
+                      }
+                  }
+              else break;
+          }
+      }
+  }
+  for (int i = 0; i < gridSize; i ++){
+      for (int j = gridSize-2; j > -1; j --){
+          cx = j;
+
+          while (1){
+              if(grid[i][cx] != 0 && grid[i][cx+1] == 0){
+                  grid[i][cx+1] = grid[i][cx];
+                  grid[i][cx] = 0;
+                  nb_evo = 1;
+                  printf("%d %d %d/", i, cx+1, j);
+              }
+              else break;
+              cx ++;
+              if (cx == gridSize) break;
+          }
+      }
+  }
+
+  return nb_evo;
+
+}
+
+int moveUp(int gridSize, int grid[gridSize][gridSize]){
+  int cx, nb_evo = 0, z = 1;
+  for (int i = 0; i < gridSize; i ++){
+      for (int j = 0; j < gridSize; j++){
+          z = 1;
+          while (1){
+            if (j+z<gridSize){
+                if (grid[i][j] == grid[i][j+z] && grid[i][j]!=0){
+                    grid[i][j] = grid[i][j]*2 ;
+                    grid[i][j+z] = 0;
+                    nb_evo = 1;
                     break;
+                    }
+                else {
+                    z++;
+                    }
                 }
-            }
-            if (grid[cx][j] == grid[cx-1][j] && grid[cx][j] != 0){
-                grid[cx][j] = 0;
-                grid[cx-1][j]*=2;
-            }
+            else break;
         }
     }
 }
 
-void moveDown(int gridSize, int grid[gridSize][gridSize]){
-    int cy;
-    for (int i = 0; i < gridSize; i ++){
-        for (int j = gridSize-2; j > -1; j--){
-            cy = j;
-            while (1){
-                if(grid[i][cy] != 0 && grid[i][cy+1] == 0){
-                    grid[i][cy+1] = grid[i][cy];
-                    grid[i][cy] = 0;
-                }
-                else break;
-                cy ++;
-                if (cy == gridSize) {
-                    cy --;
-                    break;
-                }
+for (int i = 0; i < gridSize; i ++){
+    for (int j = 1; j < gridSize; j ++){
+        cx = j;
+        while (1){
+            if(grid[i][cx] != 0 && grid[i][cx-1] == 0){
+                grid[i][cx-1] = grid[i][cx];
+                grid[i][cx] = 0;
+                nb_evo = 1;
+                printf("%d %d %d/", i, cx-1, j);
             }
-            if (grid[i][cy] == grid[i][cy+1] && grid[i][cy] != 0){
-                grid[i][cy] = 0;
-                grid[i][cy+1]*=2;
-            }
+            else break;
+            cx --;
+            if (cx == 0) break;
         }
     }
-}
-
-void moveUp(int gridSize, int grid[gridSize][gridSize]){
-    int cy;
-    for (int i = 0; i < gridSize; i ++){
-        for (int j = 1; j < gridSize; j++){
-            cy = j;
-            while (1){
-                if(grid[i][cy] != 0 && grid[i][cy-1] == 0){
-                    grid[i][cy-1] = grid[i][cy];
-                    grid[i][cy] = 0;
-                }
-                else break;
-                cy --;
-                if (cy == -1) {
-                    cy ++;
-                    break;
-                }
-            }
-            if (grid[i][cy] == grid[i][cy-1] && grid[i][cy] != 0){
-                grid[i][cy] = 0;
-                grid[i][cy-1]*=2;
-            }
-        }
-    }
+  }
+  return nb_evo;
 }

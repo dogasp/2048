@@ -19,9 +19,10 @@ int main(int argc, char** argv)
         randomPicker(gridSize, grid);
     }*/
     grid[0][0] = 2;
-    grid[3][0] = 2;
+    grid[0][3] = 2;
+    grid[0][1] = 2;
 
-    
+
     //initialisation de la fenetre et de la police
     SDL_Init(SDL_INIT_VIDEO);
     TTF_Init();

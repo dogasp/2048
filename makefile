@@ -4,7 +4,7 @@ ifeq ($(OS), Windows_NT)
 	OPT = -lm -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image
 	COM = del obj\*.o
 else
-	OPT = `pkg-config --libs --cflags sdl2`
+	OPT = `pkg-config --libs --cflags sdl2 SDL2_ttf`
 	COM = rm obj/*.o
 endif
 
@@ -16,7 +16,7 @@ all: 2048 #commande pour compiler et lancer le jeu
 	$(cc) $^ -o $@ $(OPT)
 
 obj/%o: src/%c #commande de création des .o avec les .c
-	$(cc) -c $^ -o $@ $(OPT) 
+	$(cc) -c $^ -o $@ $(OPT)
 
 
 clean: #commande pour retirer tous les fichiers objects
