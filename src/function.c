@@ -3,45 +3,54 @@
 #include <stdlib.h>
 
 void randomPicker(int gridSize, int grid[gridSize][gridSize]){
-    int available = 0;
-    for (int i = 0; i < gridSize; i ++){
-        for (int j = 0; j < gridSize; j++){
-            if (grid[i][j] == 0){
-                available = 1;
-                break;
-            }
-            if(j!=gridSize){
-               if (grid[i][j] == grid[i][j+1]){
-                   available = 1;
-               }
-            }
-            if(i!=gridSize){
-               if (grid[i][j] == grid[i+1][j]){
-                   available = 1;
-               }
-            }
-        }
-        break;
-    }
-    if (available != 0){
-        srand(time(NULL));
-        int valid = 0;
-        int x, y;
-        do{
-            x = rand()%gridSize;
-            y = rand()%gridSize;
-            if (grid[x][y] == 0){
-                valid = 1;
-                grid[x][y] = 2 + 2*rand()%2;
-            }
-        } while(!valid);
 
-    }
-    else {
-        //Message de fin
-        printf("bite fin");
-    }
+    srand(time(NULL));
+    int valid = 0;
+    int x, y;
+    do{
+        x = rand()%gridSize;
+        y = rand()%gridSize;
+        if (grid[x][y] == 0){
+            valid = 1;
+            grid[x][y] = 2 + 2*rand()%2;
+        }
+    } while(!valid);
+
 }
+
+void valid_random(int gridSize, int grid[gridSize][gridSize]){
+  int available = 0;
+  for (int i = 0; i < gridSize; i ++){
+      for (int j = 0; j < gridSize; j++){
+          if (grid[i][j] == 0){
+              available = 1;
+
+          }
+          if(j!=gridSize){
+             if (grid[i][j] == grid[i][j+1]){
+                 available = 1;
+
+             }
+          }
+          if(i!=gridSize){
+             if (grid[i][j] == grid[i+1][j]){
+                 available = 1;
+
+             }
+          }
+      }
+
+  }
+  if (available == 0){
+    printf("La partie est finie");
+  }
+  else{
+    printf("Ton coup n'est pas possible");
+  }
+}
+
+
+
 int moveRight(int gridSize, int grid[gridSize][gridSize]){
     int cx, nb_evo = 0, z = 1;
     for (int j = 0; j < gridSize; j ++){
@@ -49,17 +58,22 @@ int moveRight(int gridSize, int grid[gridSize][gridSize]){
             z = 1;
             while (1){
                 if (i-z>-1){
-                    if (grid[i][j] == grid[i-z][j] && grid[i][j]!=0){
-                        grid[i][j] = grid[i][j]*2 ;
-                        grid[i-z][j] = 0;
-                        nb_evo = 1;
-                        break;
-                        }
-                      else {
-                        z++;
-                        }
+                  if (grid[i-z][j] != grid[i][j] && grid[i-z][j] != 0)
+                    {
+                      break;
                     }
-                  else break;
+                  if (grid[i][j] == grid[i-z][j] && grid[i][j]!=0)
+                    {
+                      grid[i][j] = grid[i][j]*2 ;
+                      grid[i-z][j] = 0;
+                      nb_evo = 1;
+                      break;
+                    }
+                  else {
+                      z++;
+                    }
+                  }
+                else break;
             }
           }
         }
@@ -74,7 +88,7 @@ int moveRight(int gridSize, int grid[gridSize][gridSize]){
                     }
                 else break;
                 cx ++;
-                if (cx == gridSize) break;
+                if (cx == gridSize-1) break;
             }
         }
     }
@@ -88,6 +102,10 @@ int moveLeft(int gridSize, int grid[gridSize][gridSize]){
             z = 1;
             while (1){
               if (i+z<gridSize){
+                if (grid[i+z][j] != grid[i][j] && grid[i+z][j] != 0)
+                  {
+                    break;
+                  }
                 if (grid[i][j] == grid[i+z][j] && grid[i][j]!=0){
                   grid[i][j] = grid[i][j]*2 ;
                   grid[i+z][j] = 0;
@@ -103,7 +121,7 @@ int moveLeft(int gridSize, int grid[gridSize][gridSize]){
         }
     }
     for (int j = 0; j < gridSize; j ++){
-      for (int i = 0; i < gridSize; i ++){
+      for (int i = 1; i < gridSize; i ++){
           cx = i;
           while (1){
               if(grid[cx][j] != 0 && grid[cx-1][j] == 0){
@@ -127,16 +145,21 @@ int moveDown(int gridSize, int grid[gridSize][gridSize]){
           z = 1;
           while (1){
               if (j-z>-1){
-                  if (grid[i][j] == grid[i][j-z] && grid[i][j]!=0){
+                if (grid[i][j-z] != grid[i][j] && grid[i][j-z] != 0)
+                  {
+                    break;
+                  }
+                if (grid[i][j] == grid[i][j-z] && grid[i][j]!=0)
+                  {
                     grid[i][j] = grid[i][j]*2 ;
                     grid[i][j-z] = 0;
                     nb_evo = 1;
                     break;
-                    }
-                  else {
-                    z++;
-                    }
                   }
+                else {
+                  z++;
+                  }
+                }
               else break;
           }
       }
@@ -149,10 +172,11 @@ int moveDown(int gridSize, int grid[gridSize][gridSize]){
                 grid[i][cx+1] = grid[i][cx];
                 grid[i][cx] = 0;
                 nb_evo = 1;
+
                 }
               else break;
               cx ++;
-              if (cx == gridSize) break;
+              if (cx == gridSize-1) break;
           }
       }
   }
@@ -166,6 +190,10 @@ int moveUp(int gridSize, int grid[gridSize][gridSize]){
           z = 1;
           while (1){
             if (j+z<gridSize){
+              if (grid[i][j+z] != grid[i][j] && grid[i][j+z] != 0)
+                {
+                  break;
+                }
                 if (grid[i][j] == grid[i][j+z] && grid[i][j]!=0){
                   grid[i][j] = grid[i][j]*2 ;
                   grid[i][j+z] = 0;
@@ -196,4 +224,5 @@ int moveUp(int gridSize, int grid[gridSize][gridSize]){
     }
   }
   return nb_evo;
+
 }

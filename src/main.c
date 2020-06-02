@@ -18,9 +18,13 @@ int main(int argc, char** argv)
     /*for (int i = 0; i < 2; i ++){
         randomPicker(gridSize, grid);
     }*/
-    grid[0][0] = 2;
-    grid[0][3] = 2;
-    grid[0][1] = 2;
+    grid[0][0] = 4;
+    grid[3][3] = 64;
+    grid[1][3] = 2;
+    grid[2][3] = 512;
+    grid[3][3] = 2048;
+    grid[0][3] = 4096;
+
 
     //initialisation de la fenetre et de la police
     SDL_Init(SDL_INIT_VIDEO);
@@ -49,20 +53,40 @@ int main(int argc, char** argv)
             case SDL_KEYUP:
                 if (canclick == 1){
                     if (event.key.keysym.sym == SDLK_RIGHT){
-                        moveRight(gridSize, grid);
-                        randomPicker(gridSize, grid);
+                        int result1 = moveRight(gridSize, grid);
+                        if (result1){
+                          randomPicker(gridSize, grid);
+                          }
+                        else{
+                          valid_random(gridSize, grid);
+                        }
                     }
                     else if (event.key.keysym.sym == SDLK_DOWN){
-                        moveDown(gridSize, grid);
-                        randomPicker(gridSize, grid);
+                        int result2 = moveDown(gridSize, grid);
+                        if (result2){
+                          randomPicker(gridSize, grid);
+                        }
+                        else{
+                          valid_random(gridSize, grid);
+                        }
                     }
                     else if (event.key.keysym.sym == SDLK_LEFT){
-                        moveLeft(gridSize, grid);
-                        randomPicker(gridSize, grid);
+                        int result3 = moveLeft(gridSize, grid);
+                        if (result3){
+                          randomPicker(gridSize, grid);
+                        }
+                        else{
+                          valid_random(gridSize, grid);
+                        }
                     }
                     else if (event.key.keysym.sym == SDLK_UP){
-                        moveUp(gridSize, grid);
-                        randomPicker(gridSize, grid);
+                        int result4 = moveUp(gridSize, grid);
+                        if (result4){
+                          randomPicker(gridSize, grid);
+                        }
+                        else{
+                          valid_random( gridSize, grid);
+                        }
                     }
                 }
                 canclick = 0;
