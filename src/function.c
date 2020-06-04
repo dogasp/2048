@@ -49,7 +49,6 @@ void valid_random(int gridSize, int grid[gridSize][gridSize]){
   }
 }
 
-
 int moveRight(int gridSize, int grid[gridSize][gridSize]){
     int cx, nb_evo = 0, z = 1;
     for (int j = 0; j < gridSize; j ++){
@@ -206,7 +205,7 @@ int moveUp(int gridSize, int grid[gridSize][gridSize]){
             else break;
         }
     }
-}
+  }
   for (int i = 0; i < gridSize; i ++){
     for (int j = 1; j < gridSize; j ++){
         cx = j;
@@ -223,5 +222,4 @@ int moveUp(int gridSize, int grid[gridSize][gridSize]){
     }
   }
   return nb_evo;
-
 }

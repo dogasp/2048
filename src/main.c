@@ -7,15 +7,15 @@
 int main(int argc, char** argv)
 {
 
-    int Game_mode = Game_mode_Message();    //Solo or Multijoueur
-    int Game_mode_2 = 0;
-    if (Game_mode == 2) Game_mode_2 = Game_mode_2_Message(); //if Multi: IA or Player IRL
-    int Game_mode_3 = Game_mode_3_Message(Game_mode, Game_mode_2); // Time limited or the faster or free
+    int nb_players = nb_players_Message();    //Solo or Multijoueur
+    int Game_mode_multi = 1;
+    if (nb_players== 2) Game_mode_multi = Game_mode_multi_Message(); //if Multi: IA or Player IRL
+    int Game_mode_3 = Game_mode_3_Message(Game_mode, Game_mode_multi); // Time limited or the faster or free
     int Game_size_grid = Game_size_grid_Message(Game_mode);
 
 
     int gridSize;
-    if (Game_size_grid == 0) gridSize =4;
+    if (Game_size_grid == 4) gridSize =4;
     else gridSize =8;
     int grid[gridSize][gridSize];
     for (int i = 0; i < gridSize; i ++){
@@ -29,22 +29,9 @@ int main(int argc, char** argv)
         randomPicker(gridSize, grid);
     }
 
-    grid[0][0] = 4;
-    grid[3][3] = 8192;
-    grid[1][3] = 128;
-    grid[2][3] = 512;
-    grid[3][3] = 8192;
-    grid[0][3] = 4096;
-
-
     //initialisation de la fenetre et de la police
-    SDL_Init(SDL_INIT_VIDEO);
-    TTF_Init();
 
-    int Height = 480;
-
-    SDL_Window* window = NULL;
-    window = SDL_CreateWindow("Jeu 2048",SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Height*1.3, Height, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("Jeu 2048",SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Height*1.3, Height*1.3, SDL_WINDOW_SHOWN);
 
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);

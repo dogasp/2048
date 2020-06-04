@@ -111,7 +111,7 @@ void printGrid(SDL_Renderer * renderer, int Height, int gridSize, int grid[gridS
 
 }
 
-int Game_mode_Message(){
+int nb_players_Message(){
   //affichage des règles
   SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Règles du jeu de traverse", rules, NULL);
   //data des boutons
@@ -146,7 +146,7 @@ int Game_mode_Message(){
 
 }
 
-int Game_mode_2_Message(){
+int Game_mode_multi_Message(){
     const SDL_MessageBoxButtonData buttons[] = {
         { 0, 0, "Joueur 2" },
         { 0, 1, "IA" },
@@ -177,17 +177,16 @@ int Game_mode_2_Message(){
     return buttonid;
 }
 
-
-Game_mode_3_Message(int Game_mode, int Game_mode_2){
+int Game_mode_3_Message(int Game_mode, int Game_mode_multi){
   int x;
   if (Game_mode == 1){
     x = 1;
   }
   else if (Game_mode == 2){
-    if (Game_mode_2 == 0){
+    if (Game_mode_multi == 0){
       x = 0;
     }
-    else if(Game_mode_2 == 1){
+    else if(Game_mode_multi == 1){
       x = 2;
     }
   }
@@ -228,8 +227,8 @@ int Game_size_grid_Message(int Game_mode){
   if (Game_mode == 1) x = 0;
   else x = 1;
   const SDL_MessageBoxButtonData buttons[] = {
-      { 0, 0, "4x4" },
-      { 0, 1, "8x8" },
+      { 0, 4, "4x4" },
+      { 0, 8, "8x8" },
 
   };
   const SDL_MessageBoxColorScheme colorScheme = {
