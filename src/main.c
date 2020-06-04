@@ -6,7 +6,17 @@
 
 int main(int argc, char** argv)
 {
-    int gridSize = 4;
+
+    int Game_mode = Game_mode_Message();    //Solo or Multijoueur
+    int Game_mode_2 = 0;
+    if (Game_mode == 2) Game_mode_2 = Game_mode_2_Message(); //if Multi: IA or Player IRL
+    int Game_mode_3 = Game_mode_3_Message(Game_mode, Game_mode_2); // Time limited or the faster or free
+    int Game_size_grid = Game_size_grid_Message(Game_mode);
+
+
+    int gridSize;
+    if (Game_size_grid == 0) gridSize =4;
+    else gridSize =8;
     int grid[gridSize][gridSize];
     for (int i = 0; i < gridSize; i ++){
         for (int j = 0; j < gridSize; j ++){
@@ -15,14 +25,15 @@ int main(int argc, char** argv)
     }
 
     //tirage de deux cases au hasard
-    /*for (int i = 0; i < 2; i ++){
+    for (int i = 0; i < 2; i ++){
         randomPicker(gridSize, grid);
-    }*/
+    }
+
     grid[0][0] = 4;
-    grid[3][3] = 64;
-    grid[1][3] = 2;
+    grid[3][3] = 8192;
+    grid[1][3] = 128;
     grid[2][3] = 512;
-    grid[3][3] = 2048;
+    grid[3][3] = 8192;
     grid[0][3] = 4096;
 
 

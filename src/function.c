@@ -50,7 +50,6 @@ void valid_random(int gridSize, int grid[gridSize][gridSize]){
 }
 
 
-
 int moveRight(int gridSize, int grid[gridSize][gridSize]){
     int cx, nb_evo = 0, z = 1;
     for (int j = 0; j < gridSize; j ++){
