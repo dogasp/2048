@@ -31,13 +31,7 @@ int main(int argc, char** argv)
 
     //initialisation de la fenetre et de la police
 
-    window = SDL_CreateWindow("Jeu 2048",SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Height*1.3, Height*1.3, SDL_WINDOW_SHOWN);
 
-    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-
-    int continuer = 1, canclick = 0;
-    SDL_Event event;
 
     while (continuer){
         SDL_PollEvent(&event);
