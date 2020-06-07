@@ -34,23 +34,29 @@ void printText(char * text, SDL_Renderer * renderer, SDL_Point pos){
     SDL_DestroyTexture(Message);
 }
 
-void printGrid(SDL_Renderer * renderer, int Height, int gridSize, int grid[gridSize][gridSize]){
+void resetScreen(SDL_Renderer * renderer){
+    SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
+    SDL_RenderFillRect(renderer, NULL);
+}
+
+void printGrid(SDL_Renderer * renderer, int Height, int gridSize, int grid[gridSize][gridSize], int second){
     int interval = Height/gridSize;
     int gap = 10;
 
     SDL_Color Backcolor = {200, 200, 200, 255};
     SDL_SetRenderDrawColor(renderer, Backcolor.r, Backcolor.g, Backcolor.b, Backcolor.a);
-    SDL_RenderFillRect(renderer, NULL);
+    SDL_Rect r = {Height*second*1.4, 0, Height, Height};
+    SDL_RenderFillRect(renderer, &r);
 
     SDL_Color LineColor = {125, 125, 125, 255};
     SDL_SetRenderDrawColor(renderer, LineColor.r, LineColor.g, LineColor.b, LineColor.a);
     for (int i = 0; i < gridSize + 1; i ++){
-        SDL_Rect rect = {interval * i - gap/2, 0, gap, Height};
+        SDL_Rect rect = {interval * i - gap/2 + Height*second*1.4, 0, gap, Height};
         SDL_RenderFillRect(renderer, &rect);
     }
 
     for (int i = 0; i < gridSize + 1; i ++){
-        SDL_Rect rect = {0, interval * i - gap/2, Height, gap};
+        SDL_Rect rect = {Height*second*1.4, interval * i - gap/2, Height, gap};
         SDL_RenderFillRect(renderer, &rect);
     }
 
@@ -99,7 +105,7 @@ void printGrid(SDL_Renderer * renderer, int Height, int gridSize, int grid[gridS
                         break;
                 }
                 //SDL_SetRenderDrawColor(renderer, Backcolor.r, Backcolor.g, Backcolor.b, 150);
-                SDL_Rect rect = {interval * i + gap/2, interval * j + gap/2, interval - gap, interval - gap};
+                SDL_Rect rect = {interval * i + gap/2 + Height*second*1.4, interval * j + gap/2, interval - gap, interval - gap};
                 SDL_RenderFillRect(renderer, &rect);
                 SDL_Point location = {interval * i + interval/2, interval * j + interval/2};
                 char str[6];
