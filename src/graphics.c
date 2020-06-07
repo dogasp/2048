@@ -116,7 +116,7 @@ void printGrid(SDL_Renderer * renderer, int Height, int gridSize, int grid[gridS
     }
 
 }
-
+// hello
 int nb_players_Message(){
   //affichage des règles
   SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Règles du jeu de traverse", rules, NULL);

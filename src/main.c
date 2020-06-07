@@ -4,7 +4,7 @@
 #include <time.h>
 #include "../headers/function.h"
 #include "../headers/graphics.h"
-
+ 
 int main(int argc, char** argv)
 {
 
