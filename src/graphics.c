@@ -4,7 +4,7 @@
 #include <string.h>
 
 
-char * rules = "But du jeu";
+char * rules = "But du jeu"; 
 
 void printText(char * text, SDL_Renderer * renderer, SDL_Point pos){
     SDL_Color couleur = {0, 0, 0}; //sélection par défaut de la couleur

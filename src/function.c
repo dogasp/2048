@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
-
+ 
 void randomPicker(int gridSize, int grid[gridSize][gridSize]){
 
     srand(time(NULL));
