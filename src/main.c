@@ -15,10 +15,10 @@ int main(int argc, char** argv)
 	  int gridSize = 4;
     if (nb_players== 1) gridSize = Game_size_grid_Message(nb_players);
 
-    int grid[2][gridSize][gridSize];
+    int grid[2][8][8];
     for (int k = 0; k < 2; k++){
-      for (int i = 0; i < gridSize; i ++){
-          for (int j = 0; j < gridSize; j ++){
+      for (int i = 0; i < 8; i ++){
+          for (int j = 0; j < 8; j ++){
               grid[k][i][j] = 0;
           }
       }
