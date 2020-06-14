@@ -13,3 +13,6 @@ Pour seulement compiler, il faut exécuter **make 2048**.
 
 ## Utiliser l'application
 Pour lancer l'application, il suffit de lancer 2048.exe. 
+Au lancement de l'application, il est demandé le mode de jeu que le joueur veut faire.
+
+Pour controler le joueur 1, il faut utiliser les touches directionnelles du clavier, pour le joueur 2, il faut utiliser z,q,s,d

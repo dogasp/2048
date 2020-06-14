@@ -65,9 +65,10 @@ Start:;
 	char timer[50] = "temps restant: sec", timerRound[20] = "sec restantes", endMessage[50] = "Quitter ?";
 	SDL_Point TimerPoint = {Height / 2, Height * 1.2}, roundTimerPoint = {Height * 1.2, Height * 0.4};
 	int playerTurn = 0, result, alowed, restart = 0, canPlay[2] = {1, 1}, ended = 0;
-  	if (Game_mode_multi == 1) canPlay[1] = -1;
+	if (Game_mode_multi == 1)
+		canPlay[1] = -1;
 
-  	SDL_Point rewind1 = {Height / 2, Height * 1.1}, rewind2 = {Height * 1.9, Height * 1.1};
+	SDL_Point rewind1 = {Height / 2, Height * 1.1}, rewind2 = {Height * 1.9, Height * 1.1};
 
 	int activated = 0;
 	SDL_Event event;
@@ -157,9 +158,11 @@ Start:;
 				{
 					roundTimer = time(NULL);
 					playerTurn = (playerTurn + 1) % nb_players;
-					if (canPlay[1] == -1){
+					if (canPlay[1] == -1)
+					{
 						bot_player(gridSize, grid[1]);
 						playerTurn = 0;
+						roundTimer = time(NULL);
 					}
 				}
 				activated = 0;
@@ -191,7 +194,7 @@ Start:;
 						}
 					}
 				}
-				if (event.button.x > Height *1.9 && event.button.x < Height * 1.9 + Height / 10 && event.button.y > Height * 1.1 && event.button.y < Height * 1.1 + Height / 20)
+				if (event.button.x > Height * 1.9 && event.button.x < Height * 1.9 + Height / 10 && event.button.y > Height * 1.1 && event.button.y < Height * 1.1 + Height / 20)
 				{
 					int temp[8][8];
 					for (int i = 0; i < 8; i++)
@@ -279,7 +282,8 @@ Start:;
 			if (tmptimer == 5)
 			{
 				playerTurn = !playerTurn;
-				if (canPlay[1] == -1){
+				if (canPlay[1] == -1)
+				{
 					bot_player(gridSize, grid[1]);
 					playerTurn = 0;
 				}
@@ -289,8 +293,10 @@ Start:;
 			if (BestTile(gridSize, grid[0]) == 2048)
 			{
 				ended = 1;
-				if (nb_players == 2) sprintf(endMessage, "Joueur 1 à gagné !");
-				else sprintf(endMessage, "Partie finie !");
+				if (nb_players == 2)
+					sprintf(endMessage, "Joueur 1 à gagné !");
+				else
+					sprintf(endMessage, "Partie finie !");
 			}
 			else if (BestTile(gridSize, grid[1]) == 2048)
 			{
@@ -307,10 +313,12 @@ Start:;
 				hideGrid(renderer, Height, !playerTurn);
 		}
 		createButton("annuler", renderer, rewind1);
-		if (nb_players == 2) createButton("annuler", renderer, rewind2);
+		if (nb_players == 2)
+			createButton("annuler", renderer, rewind2);
 		SDL_RenderPresent(renderer);
 
-		if (ended) continuer = 0;
+		if (ended)
+			continuer = 0;
 	}
 	restart = EndPopUp(endMessage);
 
@@ -326,6 +334,7 @@ Start:;
 		remove("saves/last_0");
 		remove("saves/last_1");
 	}
-	if (restart == 1) goto Start;
+	if (restart == 1)
+		goto Start;
 	return 0;
 }
