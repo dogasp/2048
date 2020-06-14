@@ -1,2 +1,2 @@
-void Save(int n, int k, int a[n][k][k], int);
-void Load(char*, int*, int*, int a[2][8][8]);
+void Save(int n, int k, int, int a[k][k], int);
+void Load(int*, int*, int*, int a[8][8], int);

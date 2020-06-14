@@ -1,24 +1,26 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 #include "../headers/function.h"
 #include "../headers/graphics.h"
+#include "../headers/save.h"
 
 int main(int argc, char** argv)
 {
-
+	srand(time(NULL));
     int nb_players = nb_players_Message();    //Solo or Multijoueur
     int Game_mode_multi = 1;
     if (nb_players== 2) Game_mode_multi = Game_mode_multi_Message(); //if Multi: IA or Player IRL
     int Game_mode_3 = Game_mode_3_Message(nb_players, Game_mode_multi); // Time limited or the faster or free
-	  int gridSize = 4;
-    if (nb_players== 1) gridSize = Game_size_grid_Message(nb_players);
+	int gridSize = 4;
+    if (nb_players== 1) gridSize = Game_size_grid_Message(nb_players); 
 
-    int grid[2][8][8];
+    int grid[2][gridSize][gridSize];
     for (int k = 0; k < 2; k++){
-      for (int i = 0; i < 8; i ++){
-          for (int j = 0; j < 8; j ++){
+      for (int i = 0; i < gridSize; i ++){              //Initialistion de la grille
+          for (int j = 0; j < gridSize; j ++){
               grid[k][i][j] = 0;
           }
       }
@@ -26,10 +28,15 @@ int main(int argc, char** argv)
 
     //tirage de deux cases au hasard
     for (int i = 0; i < 2; i ++){
-		for (int j = 0; j < 2; j++){
-			randomPicker(gridSize, grid[i]);
-		}
+        for (int j = 0; j < 2; j++){
+        	randomPicker(gridSize, grid[i]);
+        }
     }
+
+	//première sauvegarde
+	Save(nb_players, gridSize, Game_mode_3, grid[0], 0);
+	Save(nb_players, gridSize, Game_mode_3, grid[1], 1);
+
 
     //initialisation de la fenetre et de la police
 
@@ -39,24 +46,28 @@ int main(int argc, char** argv)
     int Height = 480;
 
     SDL_Window* window = NULL;
-	  int delta = (nb_players == 2)?2:1;
+	int delta = (nb_players == 2)?2:1;
     window = SDL_CreateWindow("Jeu 2048",SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Height*1.2*delta, Height*1.3, SDL_WINDOW_SHOWN);
 
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
-    int continuer = 1, canclick = 0;
-	  time_t start = time(NULL);
-	  char timer[50] = "temps restant: sec";
-	  SDL_Point TimerPoint = {Height/2, Height*1.1};
-    int playerTurn;
+
+    //Initialisation des variables et du temps
+    int continuer = 1, canclick = 0, mouseCanClick = 0;
+	time_t start = time(NULL), roundTimer = time(NULL)+1;
+	char timer[50] = "temps restant: sec", timerRound[20] = "sec restantes";
+	SDL_Point TimerPoint = {Height/2, Height*1.3}, roundTimerPoint = {Height*1.2, Height*0.4};
+    int playerTurn = 0, result, alowed;
+
+	SDL_Point rewind1 = {Height/2, Height*1.2}, rewind2 = {Height*1.9, Height*1.1};
 
     int activated = 0;
     SDL_Event event;
 
-    while (continuer){
+    while (continuer){            //Début de la boucle
         SDL_PollEvent(&event);
-        switch (event.type){
+        switch (event.type){      //Gestion des touches
             case SDL_QUIT:
                 continuer = 0;
                 break;
@@ -65,79 +76,131 @@ int main(int argc, char** argv)
                 break;
             case SDL_KEYUP:
                 if (canclick == 1){
-                    if (event.key.keysym.sym == SDLK_RIGHT){
+					//commandes joueur 1
+					alowed = (Game_mode_3 == 0)?(playerTurn == 0):1;              //si on est mode chacun son tour, on regarde si c'est à nous, alors alowed = 1
+                    if (event.key.keysym.sym == SDLK_RIGHT && alowed){  //sinon on est mode simultané et alowed = 1 par défaut
+						Save(nb_players, gridSize, Game_mode_3, grid[0], 0);
                         activated = 1;
-                        int result1 = moveRight(gridSize, grid[0]);
-                        if (result1){
-                          randomPicker(gridSize, grid[0]);
-                          }
-                        else{
-                          valid_random(gridSize, grid[0]);
-                        }
+                        result = moveRight(gridSize, grid[0]);
                       }
-                    else if (event.key.keysym.sym == SDLK_DOWN){
+                    else if (event.key.keysym.sym == SDLK_DOWN && alowed){
+						Save(nb_players, gridSize, Game_mode_3, grid[0], 0);
                         activated = 1;
-                        int result2 = moveDown(gridSize, grid[0]);
-                        if (result2){
-                          randomPicker(gridSize, grid[0]);
-                        }
-                        else{
-                          valid_random(gridSize, grid[0]);
-                        }
+                        result = moveDown(gridSize, grid[0]);
                     }
-                    else if (event.key.keysym.sym == SDLK_LEFT){
+                    else if (event.key.keysym.sym == SDLK_LEFT && alowed){
+						Save(nb_players, gridSize, Game_mode_3, grid[0], 0);
                         activated = 1;
-                        int result3 = moveLeft(gridSize, grid[0]);
-                        if (result3){
-                          randomPicker(gridSize, grid[0]);
-                        }
-                        else{
-                          valid_random(gridSize, grid[0]);
-                        }
+                        result = moveLeft(gridSize, grid[0]);
                     }
-                    else if (event.key.keysym.sym == SDLK_UP){
+                    else if (event.key.keysym.sym == SDLK_UP && alowed){
+						Save(nb_players, gridSize, Game_mode_3, grid[0], 0);
                         activated = 1;
-                        int result4 = moveUp(gridSize, grid[0]);
-                        if (result4){
-                          randomPicker(gridSize, grid[0]);
-                        }
-                        else{
-                          valid_random( gridSize, grid[0]);
-                        }
+                        result = moveUp(gridSize, grid[0]);
+                    }
+          //Chaque fonction de déplacement renvoie result, si il y a eu déplacement ou fusion, result = 1
+					if (result){
+						randomPicker(gridSize, grid[0]);  //On crée une nouvelle case
+						result = 0;
+					}
+					else{
+						valid_random(gridSize, grid[0]);  //On vérifie ce qui ne va pas, partie finie ou coup impossible
+					}
+
+					//commandes joueur 2
+					alowed = (Game_mode_3 == 0)?(playerTurn == 1):1;
+					if (event.key.keysym.sym == SDLK_d && alowed){
+					Save(nb_players, gridSize, Game_mode_3, grid[1], 1);
+                        activated = 1;
+                        result = moveRight(gridSize, grid[1]);
+                      }
+                    else if (event.key.keysym.sym == SDLK_s && alowed){
+					Save(nb_players, gridSize, Game_mode_3, grid[1], 1);
+                        activated = 1;
+                        result = moveDown(gridSize, grid[1]);
+                    }
+                    else if (event.key.keysym.sym == SDLK_q && alowed){
+					Save(nb_players, gridSize, Game_mode_3, grid[1], 1);
+                        activated = 1;
+                        result = moveLeft(gridSize, grid[1]);
+                    }
+                    else if (event.key.keysym.sym == SDLK_z && alowed){
+					Save(nb_players, gridSize, Game_mode_3, grid[1], 1);	
+                        activated = 1;
+                        result = moveUp(gridSize, grid[1]);
                     }
 
-                canclick = 0;
-                if (activated == 1) playerTurn = (playerTurn + 1)%nb_players;
-                activated = 0;
+					if (result){
+						randomPicker(gridSize, grid[1]);
+						result = 0;
+					}
+					else{
+						valid_random(gridSize, grid[1]);
+					}
+					if (Game_mode_3 == 0 && activated == 1) {
+						roundTimer = time(NULL);
+						playerTurn = (playerTurn+1)%nb_players;
+					}
+					activated = 0;
+					canclick = 0;
+				}
+				break;
+			case SDL_MOUSEBUTTONDOWN:
+                mouseCanClick = 1;
                 break;
-              }
-          }
+            case SDL_MOUSEBUTTONUP:
+                if (mouseCanClick == 1){
+					//printf("%d %d\n", event.button.x, event.button.y);
+					if (event.button.x > Height/2 && event.button.x < Height/2 + Height/10 && event.button.y > Height*1.2 && event.button.y < Height*1.2 + Height/20){
+						int temp[8][8];
+						for (int i = 0; i < 8; i ++){              //Initialistion de la grille
+							for (int j = 0; j < 8; j ++){
+								temp[i][j] = 0;
+							}
+						}
+						Load(&nb_players, &gridSize, &Game_mode_3, temp, 0);
+						for (int i = 0; i < gridSize; i ++){              //Initialistion de la grille
+							for (int j = 0; j < gridSize; j ++){
+								grid[0][i][j] = temp[i][j];
+								printf("%d", temp[i][j]);
+							}
+						}
+					}
+				}
+				mouseCanClick = 0;
+				break;
+      
+    	}
 
-		resetScreen(renderer);
+		resetScreen(renderer); //rétrécir avec Switch !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		time_t current = time(NULL);
-    int SecTimer =  current - start;
-    if (Game_mode_3 == 1){
-      sprintf(timer, "Temps restant: %d sec", 300 -SecTimer);
-      printText(timer, renderer, TimerPoint);
-      if (SecTimer == 300){
+		int SecTimer =  current - start;                           //Calcul tu temps
+		if (Game_mode_3 == 1){                                     //Affichage timer en mode chrono
+			sprintf(timer, "Temps restant: %d sec", 300 -SecTimer);
+			printText(timer, renderer, TimerPoint);
+			if (SecTimer == 300){
 
-      }
-    }
-    if (Game_mode_3 == 2){
-      int best = 0;
-      for (int y = 0; y < gridSize; y ++){
-        for (int z = 0; z < gridSize; z ++){
-          if (grid[0][y][z] > best){
-            best = grid[0][y][z];
-           }
-         }
-      }
-      printf("%d", best);
-    }
-
-    printGrid(renderer, Height, gridSize, grid[0], 0);
-    if (nb_players == 2) printGrid(renderer, Height, gridSize, grid[1], 1);
-    SDL_RenderPresent(renderer);
+			}
+		}
+		if (nb_players == 2 && Game_mode_3 == 0){                
+			
+			//printf("%d", best);
+			int tmptimer = current - roundTimer;
+			sprintf(timerRound, "%d sec", 5-tmptimer);
+			printText(timerRound, renderer, roundTimerPoint);
+			if (tmptimer == 5){
+				playerTurn = !playerTurn;
+				roundTimer = time(NULL);
+			}
+		}
+		
+		printGrid(renderer, Height, gridSize, grid[0], 0); //Affichage de la grille
+		if (nb_players == 2) {
+			printGrid(renderer, Height, gridSize, grid[1], 1); //Affichage de la 2eme grille
+			if (Game_mode_3 == 0) hideGrid(renderer, Height, !playerTurn);
+		}
+		createButton("anuler", renderer, rewind1);
+		SDL_RenderPresent(renderer);
     }
 
     SDL_DestroyWindow(window);

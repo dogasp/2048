@@ -6,6 +6,7 @@
 
 char * rules = "But du jeu"; 
 
+//Fonction qui permet de d'afficher n'importe quel texte, utilisé pour les nombres dans les cases mais aussi le timer
 void printText(char * text, SDL_Renderer * renderer, SDL_Point pos){
     SDL_Color couleur = {0, 0, 0}; //sélection par défaut de la couleur
     if (strcmp(text,"2") && strcmp(text,"4")){
@@ -34,11 +35,12 @@ void printText(char * text, SDL_Renderer * renderer, SDL_Point pos){
     SDL_DestroyTexture(Message);
 }
 
-void resetScreen(SDL_Renderer * renderer){
+void resetScreen(SDL_Renderer * renderer){  //Fonction qui réinitialise la grille
     SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
     SDL_RenderFillRect(renderer, NULL);
 }
 
+//PrintGrid permet d'afficher la grille grâce à SDL, on trace alors les rectangles, on initialise les couleurs etc..
 void printGrid(SDL_Renderer * renderer, int Height, int gridSize, int grid[gridSize][gridSize], int second){
     int interval = Height/gridSize;
     int gap = 10;
@@ -59,6 +61,7 @@ void printGrid(SDL_Renderer * renderer, int Height, int gridSize, int grid[gridS
         SDL_Rect rect = {Height*second*1.4, interval * i - gap/2, Height, gap};
         SDL_RenderFillRect(renderer, &rect);
     }
+
 
     for (int i = 0; i < gridSize; i ++){
         for (int j = 0; j < gridSize; j ++){
@@ -107,7 +110,7 @@ void printGrid(SDL_Renderer * renderer, int Height, int gridSize, int grid[gridS
                 //SDL_SetRenderDrawColor(renderer, Backcolor.r, Backcolor.g, Backcolor.b, 150);
                 SDL_Rect rect = {interval * i + gap/2 + Height*second*1.4, interval * j + gap/2, interval - gap, interval - gap};
                 SDL_RenderFillRect(renderer, &rect);
-                SDL_Point location = {interval * i + interval/2, interval * j + interval/2};
+                SDL_Point location = {interval * i + interval/2 + Height*second*1.4, interval * j + interval/2};
                 char str[6];
                 sprintf(str, "%d", grid[i][j]);
                 printText(str, renderer, location);
@@ -116,9 +119,8 @@ void printGrid(SDL_Renderer * renderer, int Height, int gridSize, int grid[gridS
     }
 
 }
-// hello
 int nb_players_Message(){
-  //affichage des règles
+  //affichage nb_joueurs
   SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Règles du jeu de traverse", rules, NULL);
   //data des boutons
   const SDL_MessageBoxButtonData buttons[] = {
@@ -261,4 +263,33 @@ int Game_size_grid_Message(int Game_mode){
   if (buttonid == -1) buttonid = 0;
   return buttonid;
 
+}
+
+void hideGrid(SDL_Renderer * renderer, int Height, int playerTurn){
+    SDL_Color Backcolor = {200, 200, 200, 150};
+    SDL_SetRenderDrawColor(renderer, Backcolor.r, Backcolor.g, Backcolor.b, Backcolor.a);
+    SDL_Rect r = {Height*playerTurn*1.4-Height/10, 0, Height+Height/9, Height+Height/10};
+    SDL_RenderFillRect(renderer, &r);
+}
+
+void createButton(char * text, SDL_Renderer * renderer, SDL_Point pos){
+    SDL_Color couleur = {50, 50, 50};
+    TTF_Font* Sans = TTF_OpenFont("res/ClearSans.ttf", 16);
+    SDL_Rect Message_rect; //rectange d'affichage
+
+    SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, text, couleur); //surface où se trouvera le texte
+
+    Message_rect.x = pos.x - surfaceMessage->w/2; //calcul de la taille du rectangle suivant la taille du texte
+    Message_rect.y = pos.y - surfaceMessage->h/2;
+    
+    Message_rect.w = surfaceMessage->w; 
+    Message_rect.h = surfaceMessage->h;
+
+    SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
+    SDL_RenderFillRect(renderer, &Message_rect);
+    SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage); //création de la texture du texte et ajout au renderer
+    SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
+    TTF_CloseFont(Sans); //libération de l'espace mémoire
+    SDL_FreeSurface(surfaceMessage);
+    SDL_DestroyTexture(Message);
 }

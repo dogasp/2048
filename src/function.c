@@ -2,22 +2,22 @@
 #include <time.h>
 #include <stdlib.h>
  
+//randomPicker permet de créer une case  aléatoire (2 ou 4) après chaque coup joué
 void randomPicker(int gridSize, int grid[gridSize][gridSize]){
-
-    srand(time(NULL));
     int valid = 0;
     int x, y;
     do{
-        x = rand()%gridSize;
-        y = rand()%gridSize;
-        if (grid[x][y] == 0){
+        x = rand()%gridSize;              //aléatoire des lignes
+        y = rand() % gridSize;            //aléatoire des colonnes
+        if (grid[x][y] == 0){             //Vérification si la case est libre ou non
             valid = 1;
-            grid[x][y] = 2 + 2*rand()%2;
+            grid[x][y] = 2 + 2*rand()%2;  //aléatoire entre 2 et 4
         }
     } while(!valid);
 
 }
 
+//valid_random teste si un coup est possible ou que la partie est finie
 void valid_random(int gridSize, int grid[gridSize][gridSize]){
   int available = 0;
   for (int i = 0; i < gridSize; i ++){
@@ -26,13 +26,13 @@ void valid_random(int gridSize, int grid[gridSize][gridSize]){
               available = 1;
 
           }
-          if(j!=gridSize){
+          if(j!=gridSize){                      //Condition pour ne pas avoir d'erreurs sur la taille de la table
              if (grid[i][j] == grid[i][j+1]){
                  available = 1;
 
              }
           }
-          if(i!=gridSize){
+          if(i!=gridSize){                      //Condition pour ne pas avoir d'erreurs sur la taille de la table
              if (grid[i][j] == grid[i+1][j]){
                  available = 1;
 
@@ -49,17 +49,21 @@ void valid_random(int gridSize, int grid[gridSize][gridSize]){
   }
 }
 
+//moveRight sert à fusionner et déplacer les cases vers la droite
+/*Cette fonction est divisée en 2 parties: Une première partie qui va fusionner les cases entre elles 
+en partant de la droite vers la gauche si elles le peuvent. Et une seconde partie qui permet de déplacer
+toutes les cases vers la droite.*/
 int moveRight(int gridSize, int grid[gridSize][gridSize]){
     int cx, nb_evo = 0, z = 1;
     for (int j = 0; j < gridSize; j ++){
-        for (int i = gridSize-1; i >= 0; i--){
-            z = 1;
-            while (1){
-                if (i-z>-1){
-                  if (grid[i-z][j] != grid[i][j] && grid[i-z][j] != 0)
-                    {
-                      break;
-                    }
+        for (int i = gridSize-1; i >= 0; i--){                         //On commence bien le "for" par la droite vers la gauche
+            z = 1;                                                     //L'algorithme part de l'extrême droite et regarde à la case de gauche si
+            while (1){                                                 //si elles sont égales, si ce n'est pas le cas alors on se déplace de 1 vers la gauche
+                if (i-z>-1){                                           //et réitère l'algorithme à regarder à gauche pour voir si il y a la même case.
+                  if (grid[i-z][j] != grid[i][j] && grid[i-z][j] != 0) //Si il n'y a pas de case à gauche, z++ et on regarde alors à 2 cases à gauche
+                  {                                                    //Dès qu'une ligne est finie, on passe alors à la suivante
+                    break;                                             //Afin de ne pas avoir d'erreurs de taille de table, la boucle commence par une condition.
+                  }
                   if (grid[i][j] == grid[i-z][j] && grid[i][j]!=0)
                     {
                       grid[i][j] = grid[i][j]*2 ;
@@ -77,11 +81,11 @@ int moveRight(int gridSize, int grid[gridSize][gridSize]){
         }
     for (int j = 0; j < gridSize; j ++){
         for (int i = gridSize-2; i > -1; i --){
-            cx = i;
-            while (1){
-                if(grid[cx][j] != 0 && grid[cx+1][j] == 0){
-                    grid[cx+1][j] = grid[cx][j];
-                    grid[cx][j] = 0;
+            cx = i;                                         //La deuxième partie est assez similaire que la première mais les 
+            while (1){                                      //vérifications de longueur de table ne sont pas faites exactement de la même manière.
+                if(grid[cx][j] != 0 && grid[cx+1][j] == 0){ //Le for commence cette fois-ci à l'extrême droite -1 et vérifie ensuite si la case à sa 
+                    grid[cx+1][j] = grid[cx][j];            //droite est libre pour se déplacer, sinon on passe à la case qui est à sa gauche et ainsi de suite.
+                    grid[cx][j] = 0;                        //Enfin si une case est à l'extrême gauche, le while avec cx permet à la case de se déplacer 3 fois vers la droite
                     nb_evo = 1;
                     }
                 else break;
@@ -92,6 +96,8 @@ int moveRight(int gridSize, int grid[gridSize][gridSize]){
     }
     return nb_evo;
 }
+
+//Les 3 fonctions suivantes sont intellectuellement similaires à moveRight, seuls les départs et sens de boucles changent
 
 int moveLeft(int gridSize, int grid[gridSize][gridSize]){
     int cx, nb_evo = 0, z = 1;
@@ -133,7 +139,7 @@ int moveLeft(int gridSize, int grid[gridSize][gridSize]){
             }
         }
       }
-    return nb_evo;
+    return nb_evo; 
 }
 
 int moveDown(int gridSize, int grid[gridSize][gridSize]){
@@ -219,7 +225,17 @@ int moveUp(int gridSize, int grid[gridSize][gridSize]){
             cx --;
             if (cx == 0) break;
         }
-    }
-  }
-  return nb_evo;
+	}
+	}
+	return nb_evo;
+}
+
+int SumGrid(int gridSize, int grid[gridSize][gridSize]){
+	int sum = 0;
+	for (int i = 0; i < gridSize; i ++){
+		for (int j = 0; j < gridSize; j ++){
+			sum += grid[i][j];
+		}
+	}
+	return sum;
 }

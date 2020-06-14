@@ -1,45 +1,29 @@
 #include <stdio.h>
 #include <time.h>
 
-void Save (int playerCount, int gridSize, int grid[playerCount][gridSize][gridSize], int last){
-
-    time_t currentTime;
-    struct tm *timeComp;
-    
-    time(&currentTime);
-    timeComp = localtime(&currentTime);
-
+void Save (int playerCount, int gridSize, int gamemode, int grid[gridSize][gridSize], int playerTurn){
     FILE *file;
-    if (last) file = fopen("last", "w"); //inclure le nom du joueur dans la save
-    else file = fopen("saves/%d-%02d-%02d_%02d_%02d_%02d", timeComp->tm_year + 1900,
-                                                   timeComp->tm_mon + 1,
-                                                    timeComp->tm_mday,
-                                                    timeComp->tm_hour,
-                                                    timeComp->tm_min,
-                                                    timeComp->tm_sec);
-    fprintf("%d\n%d\n", playerCount, gridSize);
-    for (int k = 0; k < playerCount; k ++){
-        for (int i = 0; i < gridSize; i ++){
-            char tmp[gridSize];
-            for (int j = 0; j < gridSize; j ++){
-                tmp[j] = grid[k][i][j]+48;
-            }
-            fpritf(file, "%s\n", tmp);
+    char path[300];
+    sprintf(path, "saves/last_%d", playerTurn);
+    file = fopen(path, "w"); //import du fichier
+    
+    fprintf(file, "%d\n%d\n%d\n", playerCount, gridSize, gamemode);
+    for (int i = 0; i < gridSize; i ++){
+        for (int j = 0; j < gridSize; j ++){
+            fprintf(file, "%d\n", grid[i][j]);
         }
     }
     fclose(file);
 }
 
-void Load(char * path, int * playerCount, int * gridSize, int grid[2][8][8]){
+void Load(int * playerCount, int * gridSize, int * gamemode, int grid[8][8], int playerTurn){
+    char path[300];
+    sprintf(path, "saves/last_%d", playerTurn);
     FILE* file = fopen(path, "r");
-    fscanf(file, "%d\n%d\n", playerCount, gridSize);
-    for (int k = 0; k < *playerCount; k ++){
-        for (int i = 0; i < *gridSize; i++){
-            char tmp[*gridSize];
-            fscanf(file, "%s\n", tmp);
-            for (int j = 0; j < *gridSize; j++){
-                grid[k][i][j] = tmp[j] - 48;
-            }
+    fscanf(file, "%d\n%d\n%d\n", playerCount, gridSize, gamemode);
+    for (int i = 0; i < *gridSize; i++){
+        for (int j = 0; j < *gridSize; j++){
+            fscanf(file, "%d\n", &grid[i][j]);
         }
     }
     fclose(file);
